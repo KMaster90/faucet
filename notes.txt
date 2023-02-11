@@ -1,0 +1,31 @@
+initialization fase
+0x60806040526103e86000557ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff660015563ffffffff600260006101000a81548163ffffffff021916908363ffffffff1602179055506000600260046101000a81548160ff021916908360ff16021790555034801561007b57600080fd5b506102b98061008b6000396000f3fe
+
+I = instruction to read in https://ethereum.github.io/yellowpaper/paper.pdf
+V = value
+
+I  V  I  V  I  V  I  V  I  V  I  V  I  V  I  V  I  V  I  V  I  V  I  V  ... (Instruction or Value)
+60 80 60 40 52 61 03 e8 60 00 55 7f ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff f6 60 01 55 63 ff ff ff ff 60 02 60 00 61 01 00 0a 81 54 81 63 ff ff ff ff 02 19 16 90 83 63 ff ff ff ff 16 02 17 90 55 50 60 00 60 02 60 04 61 01 00 0a 81 54 81 60 ff 02 19 16 90 83 60 ff 16 02 17 90 55 50 34 80 15 61 00 7b 57 60 00 80 fd 5b 50 61 02 b9 80 61 00 8b 60 00 39 60 00 f3 fe
+0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20 21 22 23 ... (Index)
+
+//STACK (direction bottom to top)
+
+0x60 --> PUSH 40     ^
+0x60 --> PUSH 80     |
+
+//MEMORY
+
+0x52 --> MEMORY[0x40] = 0x80    // Free memory pointer
+
+// STORAGE
+--------------------------------
+//STACK (direction bottom to top)
+
+0x60 --> PUSH 00               ^
+0x61 --> PUSH 03 e8            |
+
+//MEMORY
+
+// STORAGE
+
+0x55 --> SSTORE
