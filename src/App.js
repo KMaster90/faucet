@@ -15,7 +15,7 @@ function App() {
 
     useEffect(() => {
         const loadProvider = async () => {
-            const contract = await loadContract('Faucet');
+            // const contract = await loadContract('Faucet');
             // with MetaMask, we have access to window.ethereum & to window.web3
             // metamask will inject a global API into website
             // this API allows website to request users, accounts, read data to blockchain
