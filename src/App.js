@@ -1,40 +1,37 @@
 import './App.css';
 import {useEffect, useState} from 'react';
 import Web3 from 'web3';
+import detectEthereumProvider from '@metamask/detect-provider';
+import {loadContract} from './utils/load-contract';
 
 function App() {
 
     const [web3Api, setWeb3Api] = useState({
         provider: null,
         web3: null,
+        contract: null,
     });
     const [account, setAccount] = useState(null);
 
     useEffect(() => {
         const loadProvider = async () => {
+            const contract = await loadContract('Faucet');
             // with MetaMask, we have access to window.ethereum & to window.web3
             // metamask will inject a global API into website
             // this API allows website to request users, accounts, read data to blockchain
             // sign messages and transactions
             console.log('Web3', window.web3);
             console.log('Ethereum', window.ethereum);
-            let provider = null;
-            if (window.ethereum) {
-                provider = window.ethereum;
-                try {
-                    await provider.request({method:"eth_requestAccounts"});
-                } catch (error) {
-                    console.error("User denied account access!");
-                }
-            } else if (window.web3) {
-                provider = window.web3.currentProvider;
-            } else if (!process.env.production) {
-                provider = new Web3.providers.HttpProvider('http://localhost:8545');
+            const provider = await detectEthereumProvider();
+            if (provider) {
+                provider.request({method: "eth_requestAccounts"});
+                setWeb3Api({
+                    web3: new Web3(provider),
+                    provider,
+                })
+            } else {
+                console.error("Please, install Metamask.");
             }
-            setWeb3Api({
-                web3: new Web3(provider),
-                provider,
-            })
         }
         loadProvider();
     }, []);
@@ -47,22 +44,21 @@ function App() {
         web3Api.web3 && getAccount();
     }, [web3Api.web3]);
     console.log('web3', web3Api.web3);
-    return (<div className="faucet-wrapper">
-        <div className="faucet">
-            <span><strong>Account:</strong></span>
-            <h1>{account || "not connected"}</h1>
-            <div className="balance-view is-size-2">
-                Current Balance: <strong>10</strong> ETH.
+    return (
+        <div className="faucet-wrapper">
+            <div className="faucet">
+                <div className="is-flex is-align-items-center">
+                    <span className="mr-2"><strong>Account:</strong></span>
+                    {account || <button className="button is-small" onClick={()=>web3Api.provider.request({method: "eth_requestAccounts" +
+                            ""})}>Connect Wallet</button>}
+                </div>
+                <div className="balance-view is-size-2 my-4">
+                    Current Balance: <strong>10</strong> ETH.
+                </div>
+                <button className="button is-link mr-2">Donate</button>
+                <button className="button is-primary">Withdraw</button>
             </div>
-            <button className="btn mr-2" onClick={async () => {
-                const accounts = await window.ethereum.request({method: 'eth_requestAccounts'});
-                console.log(accounts);
-            }}>Enable Ethereum
-            </button>
-            <button className="btn mr-2">Donate</button>
-            <button className="btn">Withdraw</button>
-        </div>
-    </div>);
+        </div>);
 }
 
 export default App;
