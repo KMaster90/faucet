@@ -4,7 +4,7 @@ export const loadContract = async (name,provider) => {
     const Artifact = await res.json();
 
     /**
-     * @typedef {import('@truffle/contract/lib/contract/index')} Contract
+     * @typedef {import('@truffle/contract/index')} Contract
      * @param {Contract} _contract
      */
     const _contract = contract(Artifact);
